@@ -1,3 +1,4 @@
+import { useSearchParams } from 'react-router-dom';
 import {
   Pagination,
   PaginationContent,
@@ -6,24 +7,45 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from '@/components/ui/pagination';
+} from '../pagination';
 
-export function PaginationUi() {
+export function PaginationUI() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentPage = Number(searchParams.get('page') ?? 1);
+
+  const onNextPage = () => {
+    setSearchParams({
+      page: (currentPage + 1).toString(),
+    });
+  };
+
+  const onPreviousPage = () => {
+    if (currentPage > 1) {
+      setSearchParams({
+        page: (currentPage - 1).toString(),
+      });
+    }
+  };
+
   return (
     <Pagination>
       <PaginationContent>
-        <PaginationItem>
-          <PaginationPrevious href="#" />
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href="#">1</PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationEllipsis />
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationNext href="#" />
-        </PaginationItem>
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious size="sm" onClick={onPreviousPage} />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink size="sm" onClick={onPreviousPage}>
+              {currentPage}
+            </PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationEllipsis />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationNext size="sm" onClick={onNextPage} />
+          </PaginationItem>
+        </PaginationContent>
       </PaginationContent>
     </Pagination>
   );

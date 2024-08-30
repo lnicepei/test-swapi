@@ -1,93 +1,78 @@
+import { Character, PaginatedResponse } from '@/app/providers/RouterProvider';
+import { Button } from '@/shared/ui/button';
+import { Input } from '@/shared/ui/input';
+import { PaginationUI } from '@/shared/ui/Pagination/index';
 import {
   Table,
   TableBody,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { PaginationUi } from '@/shared/ui/Pagination';
-
-const invoices = [
-  {
-    invoice: 'INV001',
-    paymentStatus: 'Paid',
-    totalAmount: '$250.00',
-    paymentMethod: 'Credit Card',
-  },
-  {
-    invoice: 'INV002',
-    paymentStatus: 'Pending',
-    totalAmount: '$150.00',
-    paymentMethod: 'PayPal',
-  },
-  {
-    invoice: 'INV003',
-    paymentStatus: 'Unpaid',
-    totalAmount: '$350.00',
-    paymentMethod: 'Bank Transfer',
-  },
-  {
-    invoice: 'INV004',
-    paymentStatus: 'Paid',
-    totalAmount: '$450.00',
-    paymentMethod: 'Credit Card',
-  },
-  {
-    invoice: 'INV005',
-    paymentStatus: 'Paid',
-    totalAmount: '$550.00',
-    paymentMethod: 'PayPal',
-  },
-  {
-    invoice: 'INV006',
-    paymentStatus: 'Pending',
-    totalAmount: '$200.00',
-    paymentMethod: 'Bank Transfer',
-  },
-  {
-    invoice: 'INV007',
-    paymentStatus: 'Unpaid',
-    totalAmount: '$300.00',
-    paymentMethod: 'Credit Card',
-  },
-];
+} from '@/shared/ui/table';
+import { Link, useLoaderData, useSearchParams } from 'react-router-dom';
 
 export function CharactersPage() {
+  const { results } = useLoaderData() as PaginatedResponse<Character>;
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const onSearchTermChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchParams({ page: '1', search: e.target.value });
+  };
+
+  const searchTerm = searchParams.get('search') ?? '';
+
   return (
     <>
-      <h1 className="text-3xl font-bold mb-4">Characters</h1>
-
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[100px]">Invoice</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Method</TableHead>
-            <TableHead className="text-right">Amount</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {invoices.map((invoice) => (
-            <TableRow key={invoice.invoice}>
-              <TableCell className="font-medium">{invoice.invoice}</TableCell>
-              <TableCell>{invoice.paymentStatus}</TableCell>
-              <TableCell>{invoice.paymentMethod}</TableCell>
-              <TableCell className="text-right">
-                {invoice.totalAmount}
-              </TableCell>
+      <h1 className="text-2xl font-bold mb-4">Star Wars Characters</h1>
+      <Input
+        type="text"
+        placeholder="Search characters..."
+        onChange={(e) => {
+          onSearchTermChange(e);
+        }}
+        value={searchTerm}
+        className="mb-4"
+      />
+      <div className="overflow-x-auto mb-4">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Name</TableHead>
+              <TableHead>Height</TableHead>
+              <TableHead>Mass</TableHead>
+              <TableHead>Gender</TableHead>
+              <TableHead>Species</TableHead>
+              <TableHead>Vehicles</TableHead>
+              <TableHead>Starships</TableHead>
+              <TableHead>Created</TableHead>
+              <TableHead>Edited</TableHead>
+              <TableHead>URL</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TableCell colSpan={3}>Total</TableCell>
-            <TableCell className="text-right">$2,500.00</TableCell>
-          </TableRow>
-        </TableFooter>
-      </Table>
-      <PaginationUi />
+          </TableHeader>
+          <TableBody>
+            {results.map((character) => (
+              <TableRow key={character.url}>
+                <TableCell>{character.name}</TableCell>
+                <TableCell>{character.height}</TableCell>
+                <TableCell>{character.mass}</TableCell>
+                <TableCell>{character.gender}</TableCell>
+                <TableCell>{character.species}</TableCell>
+                <TableCell>{character.vehicles}</TableCell>
+                <TableCell>{character.starships}</TableCell>
+                <TableCell>{character.created}</TableCell>
+                <TableCell>{character.edited}</TableCell>
+                <TableCell>
+                  <Link to={`/characters/${character.url.split('/').at(-2)}`}>
+                    <Button>Visit page</Button>
+                  </Link>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+      <PaginationUI />
     </>
   );
 }
