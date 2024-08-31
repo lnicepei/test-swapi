@@ -35,29 +35,31 @@ export function PaginationUI({
   return (
     <Pagination>
       <PaginationContent>
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious
-              size="sm"
-              onClick={onPreviousPage}
-              className={
-                currentPage <= 1 ? 'opacity-50 cursor-not-allowed' : ''
-              }
-            />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink size="sm" onClick={onPreviousPage}>
-              {currentPage}
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext
-              size="sm"
-              onClick={hasNextPage ? onNextPage : () => {}}
-              className={!hasNextPage ? 'opacity-50 cursor-not-allowed' : ''}
-            />
-          </PaginationItem>
-        </PaginationContent>
+        <PaginationItem>
+          <PaginationPrevious
+            size="sm"
+            onClick={onPreviousPage}
+            className={
+              currentPage <= 1
+                ? 'opacity-50 cursor-not-allowed'
+                : 'cursor-pointer'
+            }
+          />
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationLink size="sm" onClick={onPreviousPage}>
+            {currentPage}
+          </PaginationLink>
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationNext
+            size="sm"
+            onClick={hasNextPage ? onNextPage : () => {}}
+            className={
+              !hasNextPage ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+            }
+          />
+        </PaginationItem>
       </PaginationContent>
     </Pagination>
   );

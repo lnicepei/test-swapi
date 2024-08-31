@@ -1,4 +1,4 @@
-import { Character } from '@/app/providers/RouterProvider';
+import { Character } from '@/shared/types';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';

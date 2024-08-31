@@ -1,22 +1,9 @@
 import { queryClient } from '@/app/providers/QueryProvider';
-import { Character, PaginatedResponse } from '@/app/providers/RouterProvider';
 import { SWApi } from '@/shared/api';
+import { MINUTE } from '@/shared/lib/constants';
+import { Character, PaginatedResponse } from '@/shared/types';
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
-
-// const getCharacters = async (page: string | null, search: string | null) => {
-//   const response = await fetch(
-//     `https://swapi.dev/api/people?page=${page ?? 1}&search=${search ?? ''}`,
-//   );
-//   const data: PaginatedResponse<Character> = await response.json();
-
-//   return {
-//     results: data.results,
-//     count: data.count,
-//     next: data.next,
-//     previous: data.previous,
-//   };
-// };
 
 export const getCharactersListQueryKey = (page: string, search: string) => [
   'characters',
@@ -28,8 +15,8 @@ export const getCharactersListQueryKey = (page: string, search: string) => [
 const charactersListQuery = (page: string, search: string) => ({
   queryKey: getCharactersListQueryKey(page, search),
   queryFn: async () => SWApi.getCharacters(page, search),
-  cacheTime: 6000,
-  staleTime: 6000,
+  cacheTime: MINUTE * 10,
+  staleTime: MINUTE * 10,
 });
 
 export const charactersListLoader = async ({

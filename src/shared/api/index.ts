@@ -1,4 +1,4 @@
-import { Character, PaginatedResponse } from '@/app/providers/RouterProvider';
+import { Character, PaginatedResponse } from '@/shared/types';
 
 export class SWApi {
   static async getCharacters(page: string | null, search: string | null) {
@@ -7,12 +7,7 @@ export class SWApi {
     );
     const data: PaginatedResponse<Character> = await response.json();
 
-    return {
-      results: data.results,
-      count: data.count,
-      next: data.next,
-      previous: data.previous,
-    };
+    return data;
   }
 
   static async getCharacter(id: string) {
@@ -20,6 +15,8 @@ export class SWApi {
       `${import.meta.env.VITE_API_URL}/people/${id}`,
     );
 
-    return await response.json();
+    const data: Character = await response.json();
+
+    return data;
   }
 }

@@ -1,4 +1,4 @@
-import { useDebounce } from '@/lib/useDebounce';
+import { useDebounce } from '@/shared/lib/hooks';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Loader } from '@/shared/ui/Loader';

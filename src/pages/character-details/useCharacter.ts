@@ -1,6 +1,7 @@
 import { queryClient } from '@/app/providers/QueryProvider';
-import { Character, PaginatedResponse } from '@/app/providers/RouterProvider';
 import { SWApi } from '@/shared/api';
+import { MINUTE } from '@/shared/lib/constants';
+import { Character, PaginatedResponse } from '@/shared/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 
@@ -9,8 +10,8 @@ const getQueryKey = (id: string) => ['character', 'detail', id];
 const characterDetailQuery = (id: string) => ({
   queryKey: getQueryKey(id),
   queryFn: async () => SWApi.getCharacter(id),
-  cacheTime: 6000,
-  staleTime: 6000,
+  cacheTime: MINUTE * 10,
+  staleTime: MINUTE * 10,
 });
 
 export const loader = async ({ params }: { params: any }) => {
@@ -36,11 +37,13 @@ export const useUpdateCharacter = () => {
       data: Character;
       id: string;
     }): Promise<void> => {
+      // Mutating the character details page
       queryClient.setQueryData(getQueryKey(id), {
         ...queryClient.getQueryData(getQueryKey(id)),
         ...data,
       });
 
+      // Mutating the characters list page
       queryClient.setQueryData(
         [
           'characters',

@@ -10,7 +10,9 @@
       "@/*": ["./src/*"],
       "@/shared/*": ["./src/shared/*"]
     },
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "target": "esnext",
+    "module": "esnext"
   },
-  "types": ["node", "jest", "@testing-library/jest-dom"],
+  "types": ["node", "jest", "@testing-library/jest-dom"]
 }
