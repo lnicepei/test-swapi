@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback } from '@/shared/ui/avatar';
 import { Button } from '@/shared/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 import { Input } from '@/shared/ui/input';
+import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useCharacter, useUpdateCharacter } from './useCharacter';
@@ -9,6 +10,7 @@ import { useCharacter, useUpdateCharacter } from './useCharacter';
 export function CharacterDetailsPage() {
   const { id } = useParams();
   const { data } = useCharacter(id ?? '');
+  const { enqueueSnackbar } = useSnackbar();
 
   const { register, handleSubmit } = useForm({
     defaultValues: {
@@ -23,14 +25,24 @@ export function CharacterDetailsPage() {
   const { mutate } = useUpdateCharacter();
 
   const onSubmit = (formData: any) => {
-    const res = {
-      ...data,
-      ...formData,
-      species: formData.species.split(','),
-      edited: new Date().toISOString(),
-    };
+    try {
+      const res = {
+        ...data,
+        ...formData,
+        species: formData.species.split(','),
+        edited: new Date().toISOString(),
+      };
 
-    mutate({ data: res, id: id ?? '' });
+      mutate({ data: res, id: id ?? '' });
+
+      enqueueSnackbar('Character updated successfully', {
+        variant: 'success',
+      });
+    } catch (error) {
+      enqueueSnackbar('Error updating character', {
+        variant: 'error',
+      });
+    }
   };
 
   const navigate = useNavigate();
