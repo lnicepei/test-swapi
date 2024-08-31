@@ -1,7 +1,7 @@
-import { Character, PaginatedResponse } from '@/app/providers/RouterProvider';
-import { useDebounce } from '@/lib/useDebounce';
+import { useDebounce } from '@/shared/lib/hooks';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
+import { Loader } from '@/shared/ui/Loader';
 import { PaginationUI } from '@/shared/ui/Pagination/index';
 import {
   Table,
@@ -12,10 +12,12 @@ import {
   TableRow,
 } from '@/shared/ui/table';
 import { useEffect, useState } from 'react';
-import { Link, useLoaderData, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
+import { useCharacters } from './useCharacters';
 
 export function CharactersPage() {
-  const { results } = useLoaderData() as PaginatedResponse<Character>;
+  const { data, isLoading, hasNextPage } = useCharacters();
+
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState(
     () => searchParams.get('search') ?? '',
@@ -27,7 +29,10 @@ export function CharactersPage() {
   };
 
   useEffect(() => {
-    setSearchParams({ search: debouncedSearchTerm });
+    setSearchParams({
+      search: debouncedSearchTerm,
+      page: searchParams.get('page') ?? '1',
+    });
   }, [debouncedSearchTerm]);
 
   return (
@@ -42,6 +47,8 @@ export function CharactersPage() {
         value={searchTerm}
         className="mb-4"
       />
+      {isLoading && <Loader />}
+      {!data && <div>No data</div>}
       <div className="overflow-x-auto mb-4">
         <Table>
           <TableHeader>
@@ -56,7 +63,7 @@ export function CharactersPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {results.map((character) => (
+            {data?.results.map((character) => (
               <TableRow key={character.url}>
                 <TableCell className="max-w-32">{character.name}</TableCell>
                 <TableCell className="max-w-20">{character.height}</TableCell>
@@ -76,7 +83,7 @@ export function CharactersPage() {
                 </TableCell>
                 <TableCell className="max-w-24 ">
                   <Link
-                    to={`/characters/${character.url.split('/').at(-2)}`}
+                    to={`/characters/${character.url.split('/').at(-2)}?fromPage=${searchParams.get('page')}&fromSearch=${searchParams.get('search')}`}
                     className="w-full"
                   >
                     <Button className="w-full">Visit page</Button>
@@ -87,7 +94,7 @@ export function CharactersPage() {
           </TableBody>
         </Table>
       </div>
-      <PaginationUI />
+      <PaginationUI hasNextPage={hasNextPage} />
     </>
   );
 }

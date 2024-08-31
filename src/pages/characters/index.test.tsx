@@ -1,4 +1,4 @@
-import { Character, PaginatedResponse } from '@/app/providers/RouterProvider';
+import { Character, PaginatedResponse } from '@/shared/types';
 import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter, useLoaderData } from 'react-router-dom';
@@ -75,7 +75,9 @@ describe('CharactersPage', () => {
         <CharactersPage />
       </MemoryRouter>,
     );
-    const input = screen.getByPlaceholderText('Search characters...') as HTMLInputElement;
+    const input = screen.getByPlaceholderText(
+      'Search characters...',
+    ) as HTMLInputElement;
     fireEvent.change(input, { target: { value: 'Darth Vader' } });
     expect(input.value).toBe('Darth Vader');
   });

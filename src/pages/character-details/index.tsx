@@ -1,102 +1,131 @@
-import { Character } from '@/app/providers/RouterProvider';
 import { Avatar, AvatarFallback } from '@/shared/ui/avatar';
 import { Button } from '@/shared/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 import { Input } from '@/shared/ui/input';
+import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
-import { useLoaderData, useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useCharacter, useUpdateCharacter } from './useCharacter';
 
 export function CharacterDetailsPage() {
-  const character = useLoaderData() as Character;
+  const { id } = useParams();
+  const { data } = useCharacter(id ?? '');
+  const { enqueueSnackbar } = useSnackbar();
 
   const { register, handleSubmit } = useForm({
     defaultValues: {
-      name: character.name,
-      species: character.species.join(', '),
-      gender: character.gender,
-      homeworld: character.homeworld,
-      vehicles: character.vehicles,
+      name: data?.name,
+      species: data?.species.join(', '),
+      gender: data?.gender,
+      homeworld: data?.homeworld,
+      vehicles: data?.vehicles,
     },
   });
 
-  const onSubmit = (data: any) => {
-    alert(JSON.stringify(data, null, 2));
+  const { mutate } = useUpdateCharacter();
+
+  const onSubmit = (formData: any) => {
+    try {
+      const res = {
+        ...data,
+        ...formData,
+        species: formData.species.split(','),
+        edited: new Date().toISOString(),
+      };
+
+      mutate({ data: res, id: id ?? '' });
+
+      enqueueSnackbar('Character updated successfully', {
+        variant: 'success',
+      });
+    } catch (error) {
+      enqueueSnackbar('Error updating character', {
+        variant: 'error',
+      });
+    }
   };
 
   const navigate = useNavigate();
 
   return (
-    <div className="container mx-auto p-8">
+    <div className="container mx-auto p-4 sm:p-8">
       <Button
         onClick={() => navigate('/characters')}
         variant="outline"
-        className="mb-6 text-xl"
+        className="mb-4 sm:mb-6 text-lg sm:text-xl"
       >
         Back
       </Button>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Card className="max-w-3xl mx-auto p-6">
-          <CardHeader className="flex flex-row items-center gap-6">
-            <Avatar className="w-32 h-32">
-              <AvatarFallback className="text-5xl">
-                {character.name.charAt(0)}
+        <Card className="max-w-3xl mx-auto p-4 sm:p-6">
+          <CardHeader className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
+            <Avatar className="w-24 h-24 sm:w-32 sm:h-32">
+              <AvatarFallback className="text-4xl sm:text-5xl">
+                {data?.name.charAt(0)}
               </AvatarFallback>
             </Avatar>
             <div>
-              <CardTitle className="text-5xl">
+              <CardTitle>
+                <label
+                  className="block text-lg sm:text-xl font-semibold mb-2"
+                  htmlFor="name"
+                >
+                  Name
+                </label>
                 <Input
                   {...register('name')}
+                  id="name"
                   placeholder="Name"
-                  className="border p-2 text-xl"
+                  className="border p-2 text-lg sm:text-xl"
                 />
               </CardTitle>
             </div>
           </CardHeader>
           <CardContent>
-            <dl className="grid grid-cols-2 gap-6">
+            <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               <div>
-                <dt className="font-semibold text-xl">Species</dt>
+                <dt className="font-semibold text-lg sm:text-xl">Species</dt>
                 <dd>
                   <Input
                     {...register('species')}
                     placeholder="Species"
-                    className="border p-2 w-full text-xl"
+                    className="border p-2 w-full text-lg sm:text-xl"
                   />
                 </dd>
               </div>
               <div>
-                <dt className="font-semibold text-xl">Gender</dt>
+                <dt className="font-semibold text-lg sm:text-xl">Gender</dt>
                 <dd>
                   <Input
                     {...register('gender')}
                     placeholder="Gender"
-                    className="border p-2 w-full text-xl"
+                    className="border p-2 w-full text-lg sm:text-xl"
                   />
                 </dd>
               </div>
               <div>
-                <dt className="font-semibold text-xl">Origin</dt>
+                <dt className="font-semibold text-lg sm:text-xl">Origin</dt>
                 <dd>
                   <Input
                     {...register('homeworld')}
                     placeholder="Origin"
-                    className="border p-2 w-full text-xl"
+                    className="border p-2 w-full text-lg sm:text-xl"
                   />
                 </dd>
               </div>
               <div>
-                <dt className="font-semibold text-xl">Vehicles</dt>
+                <dt className="font-semibold text-lg sm:text-xl">Vehicles</dt>
                 <dd>
                   <Input
                     {...register('vehicles')}
                     placeholder="Vehicles"
-                    className="border p-2 w-full text-xl"
+                    className="border p-2 w-full text-lg sm:text-xl"
                   />
                 </dd>
               </div>
             </dl>
-            <div className="mt-8">
-              <Button type="submit" variant="outline" className="text-xl p-2">
+            <div className="mt-6 sm:mt-8">
+              <Button type="submit" className="text-lg sm:text-xl p-2 w-full">
                 Save
               </Button>
             </div>
