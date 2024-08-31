@@ -1,50 +1,101 @@
-# React + TypeScript + Vite
+# SWApi test task
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
+In this project I used React Query to fetch data from the SWApi and ShadCN to create UI components. Despite the API not having the character update functionality, I added a Client-side simulation of the update process.
 
-Currently, two official plugins are available:
+## Technologies Used
+- **React**
+- **TypeScript**
+- **Vite**
+- **Tailwind CSS**
+- **React Query**
+- **React Hook Form**
+- **Notistack**
+- **ESLint**
+- **Jest**
+- **ShadCN**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Project Structure
+The project follows a modular structure with a clear separation of concerns. Below is an overview of the main folders and their purposes:
 
-## Expanding the ESLint configuration
+    .
+    ├── src
+    │   ├── app/                # Application-level components and providers
+    │   │   ├── index.tsx
+    │   │   └── providers/
+    │   │       ├── NotificationProvider.tsx
+    │   │       ├── RouterProvider.tsx
+    │   │       └── QueryProvider.tsx
+    │   ├── pages/              # Page components
+    │   │   └── character-details/
+    │   │       ├── index.tsx
+    │   │       ├── index.test.tsx
+    │   │       └── useCharacter.ts
+    │   │   └── characters/
+    │   │       ├── index.tsx
+    │   │       ├── index.test.tsx
+    │   │       └── useCharacters.ts
+    │   │   └── layout/
+    │   │       └── index.tsx
+    │   └── shared/             # Shared components, utilities, and types
+    │       ├── api/            # API-related utilities
+    │       ├── lib/            # Shared libraries and utilities
+    │       ├── types/          # TypeScript types
+    │       └── ui/             # Shared UI components, I used ShadCN
+    │           ├── alert.tsx
+    │           ├── avatar.tsx
+    │           ├── button.tsx
+    │           ├── card.tsx
+    │           ├── input.tsx
+    │           ├── Loader/     # Loader component
+    │           │   └── index.tsx
+    │           └── table.tsx
+    └── README.md
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-- Configure the top-level `parserOptions` property like this:
+## Environment Variables
+The project uses environment variables to manage configuration settings. Below are the environment variables used in the project:
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-});
+- **VITE_API_URL**: The base URL for the API.
+
+Example `.env.local` file:
+```
+VITE_API_URL=https://swapi.dev/api/
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Scripts
+The following scripts are available in the project:
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react';
+- `dev`: Starts the development server.
+- `build`: Builds the project for production.
+- `lint`: Runs ESLint to check for code quality issues.
+- `preview`: Previews the production build.
+- `test`: Runs the test suite using Jest.
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-});
-```
+## Installation and Setup
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/your-repo/project-name.git
+   ```
+2. Navigate to the project directory:
+   ```sh
+   cd project-name
+   ```
+3. Install dependencies:
+   ```sh
+   npm install
+   ```
+4. Create a \`.env.local\` file and add the necessary environment variables:
+   ```sh
+   VITE_API_URL=https://swapi.dev/api/
+   ```
+5. Start the development server:
+   ```sh
+   npm run dev
+   ```
+
+## Contributing
+Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
+
+## License
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.

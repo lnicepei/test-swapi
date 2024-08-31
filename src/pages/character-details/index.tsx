@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback } from '@/shared/ui/avatar';
 import { Button } from '@/shared/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
+import { Card, CardContent, CardHeader } from '@/shared/ui/card';
 import { Input } from '@/shared/ui/input';
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
@@ -15,10 +15,9 @@ export function CharacterDetailsPage() {
   const { register, handleSubmit } = useForm({
     defaultValues: {
       name: data?.name,
-      species: data?.species.join(', '),
+      height: data?.height,
+      mass: data?.mass,
       gender: data?.gender,
-      homeworld: data?.homeworld,
-      vehicles: data?.vehicles,
     },
   });
 
@@ -29,7 +28,6 @@ export function CharacterDetailsPage() {
       const res = {
         ...data,
         ...formData,
-        species: formData.species.split(','),
         edited: new Date().toISOString(),
       };
 
@@ -64,66 +62,70 @@ export function CharacterDetailsPage() {
                 {data?.name.charAt(0)}
               </AvatarFallback>
             </Avatar>
-            <div>
-              <CardTitle>
-                <label
-                  className="block text-lg sm:text-xl font-semibold mb-2"
-                  htmlFor="name"
-                >
-                  Name
-                </label>
-                <Input
-                  {...register('name')}
-                  id="name"
-                  placeholder="Name"
-                  className="border p-2 text-lg sm:text-xl"
-                />
-              </CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-              <div>
-                <dt className="font-semibold text-lg sm:text-xl">Species</dt>
-                <dd>
+            <div className="flex flex-col w-full">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mt-4">
+                <div>
+                  <label
+                    className="font-semibold text-lg sm:text-xl"
+                    htmlFor="name"
+                  >
+                    Name
+                  </label>
                   <Input
-                    {...register('species')}
-                    placeholder="Species"
-                    className="border p-2 w-full text-lg sm:text-xl"
+                    {...register('name')}
+                    id="name"
+                    placeholder="Name"
+                    className="border p-2 text-lg sm:text-xl"
                   />
-                </dd>
-              </div>
-              <div>
-                <dt className="font-semibold text-lg sm:text-xl">Gender</dt>
-                <dd>
+                </div>
+                <div>
+                  <label
+                    className="font-semibold text-lg sm:text-xl"
+                    htmlFor="gender"
+                  >
+                    Gender
+                  </label>
                   <Input
                     {...register('gender')}
+                    id="gender"
                     placeholder="Gender"
                     className="border p-2 w-full text-lg sm:text-xl"
                   />
-                </dd>
-              </div>
-              <div>
-                <dt className="font-semibold text-lg sm:text-xl">Origin</dt>
-                <dd>
+                </div>
+                <div>
+                  <label
+                    className="font-semibold text-lg sm:text-xl"
+                    htmlFor="height"
+                  >
+                    Height
+                  </label>
                   <Input
-                    {...register('homeworld')}
-                    placeholder="Origin"
+                    {...register('height')}
+                    id="height"
+                    placeholder="Height"
+                    className="border p-2 w-full text-lg sm:text-xl"
+                    type="number"
+                  />
+                </div>
+                <div>
+                  <label
+                    className="font-semibold text-lg sm:text-xl"
+                    htmlFor="mass"
+                  >
+                    Mass
+                  </label>
+                  <Input
+                    {...register('mass')}
+                    id="mass"
+                    placeholder="Mass"
+                    type="number"
                     className="border p-2 w-full text-lg sm:text-xl"
                   />
-                </dd>
+                </div>
               </div>
-              <div>
-                <dt className="font-semibold text-lg sm:text-xl">Vehicles</dt>
-                <dd>
-                  <Input
-                    {...register('vehicles')}
-                    placeholder="Vehicles"
-                    className="border p-2 w-full text-lg sm:text-xl"
-                  />
-                </dd>
-              </div>
-            </dl>
+            </div>
+          </CardHeader>
+          <CardContent>
             <div className="mt-6 sm:mt-8">
               <Button type="submit" className="text-lg sm:text-xl p-2 w-full">
                 Save
