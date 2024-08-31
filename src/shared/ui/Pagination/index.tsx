@@ -8,13 +8,18 @@ import {
   PaginationPrevious,
 } from '../pagination';
 
-export function PaginationUI() {
+export function PaginationUI({
+  hasNextPage = true,
+}: {
+  hasNextPage?: boolean;
+}) {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = Number(searchParams.get('page') ?? 1);
 
   const onNextPage = () => {
     setSearchParams({
       page: (currentPage + 1).toString(),
+      search: searchParams.get('search') ?? '',
     });
   };
 
@@ -22,6 +27,7 @@ export function PaginationUI() {
     if (currentPage > 1) {
       setSearchParams({
         page: (currentPage - 1).toString(),
+        search: searchParams.get('search') ?? '',
       });
     }
   };
@@ -45,7 +51,11 @@ export function PaginationUI() {
             </PaginationLink>
           </PaginationItem>
           <PaginationItem>
-            <PaginationNext size="sm" onClick={onNextPage} />
+            <PaginationNext
+              size="sm"
+              onClick={hasNextPage ? onNextPage : () => {}}
+              className={!hasNextPage ? 'opacity-50 cursor-not-allowed' : ''}
+            />
           </PaginationItem>
         </PaginationContent>
       </PaginationContent>

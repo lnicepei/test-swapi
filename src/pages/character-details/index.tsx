@@ -1,26 +1,36 @@
-import { Character } from '@/app/providers/RouterProvider';
 import { Avatar, AvatarFallback } from '@/shared/ui/avatar';
 import { Button } from '@/shared/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 import { Input } from '@/shared/ui/input';
 import { useForm } from 'react-hook-form';
-import { useLoaderData, useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useCharacter, useUpdateCharacter } from './useCharacter';
 
 export function CharacterDetailsPage() {
-  const character = useLoaderData() as Character;
+  const { id } = useParams();
+  const { data } = useCharacter(id ?? '');
 
   const { register, handleSubmit } = useForm({
     defaultValues: {
-      name: character.name,
-      species: character.species.join(', '),
-      gender: character.gender,
-      homeworld: character.homeworld,
-      vehicles: character.vehicles,
+      name: data?.name,
+      species: data?.species.join(', '),
+      gender: data?.gender,
+      homeworld: data?.homeworld,
+      vehicles: data?.vehicles,
     },
   });
 
-  const onSubmit = (data: any) => {
-    alert(JSON.stringify(data, null, 2));
+  const { mutate } = useUpdateCharacter();
+
+  const onSubmit = (formData: any) => {
+    const res = {
+      ...data,
+      ...formData,
+      species: formData.species.split(','),
+      edited: new Date().toISOString(),
+    };
+
+    mutate({ data: res, id: id ?? '' });
   };
 
   const navigate = useNavigate();
@@ -39,7 +49,7 @@ export function CharacterDetailsPage() {
           <CardHeader className="flex flex-row items-center gap-6">
             <Avatar className="w-32 h-32">
               <AvatarFallback className="text-5xl">
-                {character.name.charAt(0)}
+                {data?.name.charAt(0)}
               </AvatarFallback>
             </Avatar>
             <div>

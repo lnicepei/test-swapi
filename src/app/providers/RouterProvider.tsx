@@ -1,5 +1,7 @@
 import { CharacterDetailsPage } from '@/pages/character-details';
+import { loader } from '@/pages/character-details/useCharacter';
 import { CharactersPage } from '@/pages/characters';
+import { charactersListLoader } from '@/pages/characters/useCharacters';
 import { Layout } from '@/pages/layout';
 import {
   createBrowserRouter,
@@ -14,26 +16,6 @@ export type PaginatedResponse<T> = {
   next?: string;
   previous?: string;
   results: T[];
-};
-
-const getCharacters = async (page: string | null, search: string | null) => {
-  const response = await fetch(
-    `https://swapi.dev/api/people?page=${page ?? 1}&search=${search ?? ''}`,
-  );
-  const data: PaginatedResponse<Character> = await response.json();
-
-  return {
-    results: data.results,
-    count: data.count,
-    next: data.next,
-    previous: data.previous,
-  };
-};
-
-const getCharacter = async (id: string | undefined) => {
-  const response = await fetch(`https://swapi.dev/api/people/${id}`);
-  const data: Character = await response.json();
-  return data;
 };
 
 export type Character = {
@@ -65,20 +47,12 @@ const router = createBrowserRouter([
           {
             path: 'characters',
             element: <CharactersPage />,
-            loader: async ({ request }) => {
-              const page = new URL(request.url).searchParams.get('page');
-              const search = new URL(request.url).searchParams.get('search');
-              const characters = await getCharacters(page, search);
-              return characters;
-            },
+            loader: charactersListLoader,
           },
           {
             path: 'characters/:id',
             element: <CharacterDetailsPage />,
-            loader: async ({ params }) => {
-              const character = await getCharacter(params.id);
-              return character;
-            },
+            loader: loader,
           },
           {
             path: '/',
