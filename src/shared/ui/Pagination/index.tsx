@@ -2,7 +2,6 @@ import { useSearchParams } from 'react-router-dom';
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
@@ -32,15 +31,18 @@ export function PaginationUI() {
       <PaginationContent>
         <PaginationContent>
           <PaginationItem>
-            <PaginationPrevious size="sm" onClick={onPreviousPage} />
+            <PaginationPrevious
+              size="sm"
+              onClick={onPreviousPage}
+              className={
+                currentPage <= 1 ? 'opacity-50 cursor-not-allowed' : ''
+              }
+            />
           </PaginationItem>
           <PaginationItem>
             <PaginationLink size="sm" onClick={onPreviousPage}>
               {currentPage}
             </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationEllipsis />
           </PaginationItem>
           <PaginationItem>
             <PaginationNext size="sm" onClick={onNextPage} />

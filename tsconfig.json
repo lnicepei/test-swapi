@@ -9,6 +9,8 @@
     "paths": {
       "@/*": ["./src/*"],
       "@/shared/*": ["./src/shared/*"]
-    }
-  }
+    },
+    "jsx": "react-jsx"
+  },
+  "types": ["node", "jest", "@testing-library/jest-dom"],
 }
